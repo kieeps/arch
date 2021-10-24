@@ -28,12 +28,13 @@ echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 ## Pick a username
-read -p "${RED}Please enter username:${NC}" username
+echo -e "${RED}Please enter a username:"
+read -p ">>" username
 
 lsblk
 echo -e ${RED}"Please enter the disk to install on: (example /dev/sda)"${NC}
 read DISK
-echo -e "Are you sure? ${DISK} will be deleted during the setup if you use this one."
+echo -e "${RED}Are you sure? ${DISK} will be deleted during the setup if you use this one.${NC}"
 read -p "Continue? (Y/N):" formatdisk
 case $formatdisk in
 

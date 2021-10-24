@@ -120,6 +120,7 @@ pacstrap /mnt base base-devel linux linux-firmware vim nano sudo archlinux-keyri
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 
+
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -177,6 +178,48 @@ sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mn
 
 source /root/arch/pkgs.conf
 for PKG in "${PKGS[@]}"; do
-    echo "INSTALLING: ${PKG}"
     arch-chroot /mnt sudo pacman -S "$PKG" --noconfirm --needed
 done
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}            Install Microcode              ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+proc_type=$(lscpu | awk '/Vendor ID:/ {print $3}')
+case "$proc_type" in
+	GenuineIntel)
+		arch-chroot /mnt pacman -S --noconfirm intel-ucode
+		arch-chroot /mnt proc_ucode=intel-ucode.img
+		;;
+	AuthenticAMD)
+		arch-chroot /mnt pacman -S --noconfirm amd-ucode
+		arch-chroot /mnt proc_ucode=amd-ucode.img
+		;;
+esac	
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}           Install GPU Drivers             ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+if lspci | grep -E "NVIDIA|GeForce"; then
+    if [[ ${nvidia} =~ "eta" ]]; then
+        arch-chroot /mnt pacman -S nvidia-beta --noconfirm --needed
+        arch-chroot /mnt nvidia-xconfig
+    else
+        arch-chroot /mnt pacman -S nvidia --noconfirm --needed
+	    arch-chroot /mnt nvidia-xconfig
+    fi
+elif lspci | grep -E "Radeon"; then
+    arch-chroot /mnt pacman -S xf86-video-amdgpu --noconfirm --needed
+elif lspci | grep -E "Integrated Graphics Controller"; then
+    arch-chroot /mnt pacman -S libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils --needed --noconfirm
+fi
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+arch-chroot /mnt useradd -m -G wheel,libvirt -s /bin/bash $username
+arch-chroot /mnt passwd $username
+cp -R /root/arch /mnt/home/$username/
+arch-chroot /mnt chown -R $username: /home/$username/arch

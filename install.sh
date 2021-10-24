@@ -178,7 +178,7 @@ sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mn
 
 source /root/arch/pkgs.conf
 for PKG in "${PKGS[@]}"; do
-    arch-chroot /mnt sudo pacman -S "$PKG" --noconfirm --needed
+    arch-chroot /mnt sudo yay -S --noconfirm $PKG
 done
 
 echo -e ${RED}"-------------------------------------------------"

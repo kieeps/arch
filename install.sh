@@ -223,3 +223,22 @@ arch-chroot /mnt useradd -m -G wheel,libvirt -s /bin/bash $username
 arch-chroot /mnt passwd $username
 cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}            Enabling Services              ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+arch-chroot /mnt systemctl enable sddm.service
+arch-chroot /mnt systemctl enable cups.service
+arch-chroot /mnt ntpd -qg
+arch-chroot /mnt systemctl enable ntpd.service
+arch-chroot /mnt systemctl disable dhcpcd.service
+arch-chroot /mnt systemctl stop dhcpcd.service
+arch-chroot /mnt systemctl enable NetworkManager.service
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+sed -i 's/^%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
+sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /mnt/etc/sudoers

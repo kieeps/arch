@@ -35,3 +35,4 @@ read -p "Continue? (Y/N):" formatdisk
 case $formatdisk in
 
 y|Y|yes|Yes|YES)
+echo -e "${RED} Okey then, here we go!"

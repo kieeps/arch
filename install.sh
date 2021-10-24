@@ -41,7 +41,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 ## Set Keymap
 echo -e "${RED}Select Keymap. (${GREEN}Swedish is sv-latin1${RED})${NC}"
-read -p ">>" keymaps
+read -p ">>" keymap
 localectl --no-ask-password set-keymap ${keymap}
 
 

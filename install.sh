@@ -55,9 +55,15 @@ sed -i 's/^#sv_SE.UTF-8 UTF-8/sv_SE.UTF-8 UTF-8/' /etc/locale.gen
 echo -e "${RED}Please enter a username:${NC}"
 read -p ">>" username
 
+# Stable or Beta drivers
+if lspci | grep -E "NVIDIA|GeForce"; then
+    echo -p "${RED}Do you prefer ${CYAN}Beta ${RED}or ${CYAN} Stable${RED} NVidia drivers?${NC}"
+    read -p >> nvidia
+fi
+
 lsblk
-echo -e ${RED}"Please enter the disk to install on: (example /dev/sda)"${NC}
-read DISK
+echo -e ${RED}"Please enter the disk to install on: (${GREEN}example /dev/sda${RED})"${NC}
+read -p ">>" DISK
 echo -e "${RED}Are you sure? ${DISK} will be deleted during the setup if you use this one.${NC}"
 read -p "Continue? (Y/N):" formatdisk
 case $formatdisk in

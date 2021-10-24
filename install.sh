@@ -89,11 +89,35 @@ y|Y|yes|Yes|YES)
     ls /mnt | xargs btrfs subvolume delete
     btrfs subvolume create /mnt/@
     umount /mnt
+    mount -t btrfs -o subvol=@ -L ROOT /mnt
+    mkdir /mnt/boot
+    mkdir /mnt/boot/efi
+    mount -t vfat -L UEFISYS /mnt/boot/
     ;;
 n|N|no|No|NO)
     echo -e "${RED}Fine! come back when you know where to install.${NC}"
     exit
     ;;
-
-
 esac
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}        Installing Arch on drive           ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+pacstrap /mnt base base-devel linux linux-firmware vim nano sudo archlinux-keyring wget libnewt --noconfirm --needed
+genfstab -U /mnt >> /mnt/etc/fstab
+echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+bootctl install --esp-path=/mnt/boot
+[ ! -d "/mnt/boot/loader/entries" ] && mkdir -p /mnt/boot/loader/entries
+cat <<EOF > /mnt/boot/loader/entries/arch.conf
+title Arch Linux  
+linux /vmlinuz-linux  
+initrd  /initramfs-linux.img  
+options root=LABEL=ROOT rw rootflags=subvol=@
+EOF
+cp -R ~/arch /mnt/root/
+cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist

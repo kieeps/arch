@@ -27,6 +27,9 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
+## Pick a username
+read -p "${RED}Please enter username:${NC}" username
+
 lsblk
 echo -e ${RED}"Please enter the disk to install on: (example /dev/sda)"${NC}
 read DISK

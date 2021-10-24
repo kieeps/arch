@@ -28,9 +28,9 @@ echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 lsblk
-echo ${RED}"Please enter the disk to install on: (example /dev/sda)"${NC}
+echo -e ${RED}"Please enter the disk to install on: (example /dev/sda)"${NC}
 read DISK
-echo "Are you sure? ${DISK} will be deleted during the setup if you use this one."
+echo -e "Are you sure? ${DISK} will be deleted during the setup if you use this one."
 read -p "Continue? (Y/N):" formatdisk
 case $formatdisk in
 

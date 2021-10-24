@@ -146,7 +146,9 @@ arch-chroot /mnt timedatectl --no-ask-password set-timezone Europe/Stockholm
 arch-chroot /mnt timedatectl --no-ask-password set-ntp 1
 arch-chroot /mnt localectl --no-ask-password set-locale LANG="en_US.UTF-8" LC_COLLATE="" LC_TIME="sv_SE.UTF-8"
 
-
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}      Enable Multilib and Chaotic          ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
 #Enable multilib
 arch-chroot /mnt sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
@@ -156,6 +158,11 @@ arch-chroot /mnt pacman-key --lsign-key 3056513887B78AEB
 arch-chroot /mnt pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
 arch-chroot /mnt echo "[chaotic-aur]" >> /etc/pacman.conf
 arch-chroot /mnt echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /etc/pacman.conf
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}    Install Basesystem and software        ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
 
 arch-chroot /mnt pacman -Sy --noconfirm
 

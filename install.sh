@@ -171,11 +171,9 @@ echo -e ${RED}"---${CYAN}    Install Basesystem and software        ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 
-arch-chroot /mnt pacman -Sy --noconfirm
-
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 
-
+arch-chroot /mnt pacman -Sy yay --noconfirm
 source /root/arch/pkgs.conf
 for PKG in "${PKGS[@]}"; do
     arch-chroot /mnt sudo yay -S --noconfirm $PKG

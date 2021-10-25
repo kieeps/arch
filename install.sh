@@ -129,8 +129,9 @@ echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
-arch-chroot pacman pacman -S --noconfirm grub 
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/mnt --bootloader-id=GRUB
+arch-chroot pacman pacman -S grub --noconfirm
+arch-chroot pacman pacman -S efibootmgr --noconfirm
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 cp -R ~/arch /mnt/root/
 
 echo -e ${RED}"-------------------------------------------------"
@@ -245,6 +246,6 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
+#arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 sed -i 's/^%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /mnt/etc/sudoers

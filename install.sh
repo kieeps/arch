@@ -242,6 +242,7 @@ arch-chroot /mnt systemctl enable ntpd.service
 arch-chroot /mnt systemctl disable dhcpcd.service
 arch-chroot /mnt systemctl stop dhcpcd.service
 arch-chroot /mnt systemctl enable NetworkManager.service
+arch-chroot /mnt systemctl enable docker.service
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"

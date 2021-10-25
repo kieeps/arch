@@ -15,6 +15,7 @@ GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 PURPLE='\033[0;35m'
 NC='\033[0m'
+sed -i 's/^#Color/Color/' /etc/pacman.conf
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
@@ -24,7 +25,6 @@ timedatectl set-ntp true
 pacman -Sy
 pacman -S --noconfirm pacman-contrib
 sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
-sed -i 's/^#Color/Color/' /etc/pacman.conf
 pacman -S --noconfirm reflector rsync
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 reflector -a 48 -c SE -c DK -c NO -c UK -c DE -f 25 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
@@ -118,7 +118,7 @@ n|N|no|No|NO)
 esac
 
 echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}        Installing Arch on drive           ${RED}---"
+echo -e ${RED}"---${CYAN}      Installing essential packages        ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring wget libnewt --noconfirm --needed
@@ -129,9 +129,9 @@ echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
-arch-chroot pacman pacman -S grub --noconfirm
-arch-chroot pacman pacman -S efibootmgr --noconfirm
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+arch-chroot /mnt pacman -Sy grub grub-btrfs efibootmgr --noconfirm
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 cp -R ~/arch /mnt/root/
 
 echo -e ${RED}"-------------------------------------------------"

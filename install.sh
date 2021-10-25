@@ -181,7 +181,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 
-arch-chroot /mnt pacman -Sy yay --noconfirm --needed
 source /root/arch/pkgs.conf
 for PKG in "${PKGS[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG

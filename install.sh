@@ -126,6 +126,14 @@ pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring w
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}               Set locale                  ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+arch-chroot /mnt locale-gen
+arch-chroot /mnt timedatectl --no-ask-password set-timezone Europe/Stockholm
+arch-chroot /mnt timedatectl --no-ask-password set-ntp 1
+arch-chroot /mnt localectl --no-ask-password set-locale LANG="en_US.UTF-8" LC_COLLATE="" LC_TIME="sv_SE.UTF-8"
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
@@ -150,15 +158,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt pacman -S networkmanager dhclient --noconfirm --needed
 arch-chroot /mnt systemctl enable --now NetworkManager
-
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}               Set locate                  ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-
-arch-chroot /mnt locale-gen
-arch-chroot /mnt timedatectl --no-ask-password set-timezone Europe/Stockholm
-arch-chroot /mnt timedatectl --no-ask-password set-ntp 1
-arch-chroot /mnt localectl --no-ask-password set-locale LANG="en_US.UTF-8" LC_COLLATE="" LC_TIME="sv_SE.UTF-8"
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}      Enable Multilib and Chaotic          ${RED}---"

@@ -18,6 +18,9 @@ NC='\033[0m'
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '/^Architecture/a ILoveCandy' /etc/pacman.conf
 
+## Debug 
+exec 1>log.out 2>&1
+
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}

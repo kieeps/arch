@@ -16,6 +16,7 @@ CYAN='\033[0;36m'
 PURPLE='\033[0;35m'
 NC='\033[0m'
 sed -i 's/^#Color/Color/' /etc/pacman.conf
+sed -i '/^Architecture/a ILoveCandy' /etc/pacman.conf
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"

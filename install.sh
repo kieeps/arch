@@ -24,7 +24,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 timedatectl set-ntp true
 pacman -Sy
-pacman -S --noconfirm pacman-contrib
 sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 reflector -a 48 -c SE -c DK -c NO -c UK -c DE -f 25 -l 20 --sort rate --save /etc/pacman.d/mirrorlist

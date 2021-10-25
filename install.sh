@@ -234,7 +234,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 echo "make the user"
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
 echo "try to change the password"
-arch-chroot /mnt echo -e "$username:$password" | arch-chroot /mnt chpasswd
+echo -e "$username:$password" | arch-chroot /mnt chpasswd
 echo "move the files to the home folder....for some reason?"
 cp -R /root/arch /mnt/home/$username/
 echo "change ownerchip of said files"

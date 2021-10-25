@@ -44,16 +44,20 @@ echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 ## Set Keymap
-echo -e "${RED}Select Keymap. (${GREEN}Swedish is sv-latin1${RED})${NC}"
-read -p ">>" keymap
-localectl --no-ask-password set-keymap ${keymap}
+#echo -e "${RED}Select Keymap. (${GREEN}Swedish is sv-latin1${RED})${NC}"
+#read -p ">>" keymap
+localectl --no-ask-password set-keymap sv-latin1
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 sed -i 's/^#sv_SE.UTF-8 UTF-8/sv_SE.UTF-8 UTF-8/' /etc/locale.gen
 
 
 ## Pick a username
-echo -e "${RED}Please enter a username:${NC}"
+echo -e "${RED}Please pick a username:${NC}"
 read -p ">>" username
+
+## Pick a password
+echo -e "${RED}Please pick a password:${NC}"
+read -p ">>" password
 
 # Stable or Beta drivers
 if lspci | grep -E "NVIDIA|GeForce"; then
@@ -116,7 +120,7 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}        Installing Arch on drive           ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
-pacstrap /mnt base base-devel linux linux-firmware vim nano sudo archlinux-keyring wget libnewt --noconfirm --needed
+pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring wget libnewt --noconfirm --needed
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 
@@ -125,11 +129,17 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 arch-chroot pacman pacman -S --noconfirm grub 
-arch-chroot grub-install --target=x86_64-efi --efi-directory=/mnt --bootloader-id=GRUB
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/mnt --bootloader-id=GRUB
 cp -R ~/arch /mnt/root/
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}          Copy configs over                ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 cp /etc/makepkg.conf /mnt/etc/makepkg.conf
 cp /etc/locale.gen /mnt/etc/locale.gen
+cp /etc/pacman.conf /mnt/etc/pacman.conf
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Network Components          ${RED}---"
@@ -211,7 +221,7 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
-arch-chroot /mnt useradd -m -G wheel,libvirt -s /bin/bash $username
+arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
 arch-chroot /mnt passwd $username
 cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch

@@ -231,6 +231,15 @@ cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch
 
 echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}           Costumizing System              ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+wget https://cloud.kieeps.com/s/QzpPF5Tcw2tHY3L/download -O /mnt/home/kieeps/kieeps.knsv
+arch-chroot /mnt sudo konsave -i /home/kieeps/kieeps.knsv
+arch-chroot /mnt sudo konsave -a kieeps
+
+
+
+echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Enabling Services              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 

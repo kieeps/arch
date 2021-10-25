@@ -170,6 +170,8 @@ arch-chroot /mnt pacman-key --lsign-key 3056513887B78AEB
 arch-chroot /mnt pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm --needed
 echo "[chaotic-aur]" >> /mnt/etc/pacman.conf
 echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /mnt/etc/pacman.conf
+arch-chroot /mnt pacman -S paru --noconfirm
+arch-chroot /mnt paru -Sy powerpill --noconfirm
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Install Basesystem and software        ${RED}---"
@@ -181,7 +183,7 @@ sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mn
 arch-chroot /mnt pacman -Sy yay --noconfirm --needed
 source /root/arch/pkgs.conf
 for PKG in "${PKGS[@]}"; do
-    arch-chroot /mnt sudo yay -S --noconfirm $PKG
+    arch-chroot /mnt paru -S --noconfirm $PKG
 done
 
 echo -e ${RED}"-------------------------------------------------"

@@ -238,5 +238,6 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=grub
 sed -i 's/^%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /mnt/etc/sudoers

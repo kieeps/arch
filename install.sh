@@ -61,6 +61,10 @@ read -p ">>" username
 echo -e "${RED}Please pick a password:${NC}"
 read -p ">>" password
 
+## Pick a hostname
+echo -e "${RED}Please pick a hostname:${NC}"
+read -p ">>" hostname
+
 # Stable or Beta drivers
 if lspci | grep -E "NVIDIA|GeForce"; then
     echo -p "${RED}Do you prefer ${CYAN}Beta ${RED}or ${CYAN} Stable${RED} NVidia drivers?${NC}"

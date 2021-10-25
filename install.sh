@@ -162,6 +162,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt pacman -S networkmanager dhclient --noconfirm --needed
 arch-chroot /mnt systemctl enable --now NetworkManager
+echo $hostname > /etc/hostname
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}      Enable Multilib and Chaotic          ${RED}---"
@@ -228,8 +229,7 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
-arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
-arch-chroot /mnt passwd $username
+arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username -p $password
 cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch
 

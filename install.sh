@@ -230,7 +230,7 @@ echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
-arch-chroot /mnt echo -e "$password\n$password" |sudo passwd $username
+arch-chroot /mnt echo -e "$password\n$password" |arch-chroot /mnt passwd $username
 # arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username -p $password
 cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch

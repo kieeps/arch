@@ -19,7 +19,7 @@ sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '/^Architecture/a ILoveCandy' /etc/pacman.conf
 
 ## Debug 
-exec 1>log.out 2>&1
+# exec 1>log.out 2>&1
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
@@ -231,11 +231,13 @@ fi
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
-
+echo "make the user"
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
+echo "try to change the password"
 arch-chroot /mnt echo -e "$username:$password" | arch-chroot /mnt chpasswd
-# arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username -p $password
+echo "move the files to the home folder....for some reason?"
 cp -R /root/arch /mnt/home/$username/
+echo "change ownerchip of said files"
 arch-chroot /mnt chown -R $username: /home/$username/arch
 
 echo -e ${RED}"-------------------------------------------------"

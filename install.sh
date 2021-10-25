@@ -131,7 +131,7 @@ echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 arch-chroot pacman pacman -S grub --noconfirm
 arch-chroot pacman pacman -S efibootmgr --noconfirm
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 cp -R ~/arch /mnt/root/
 
 echo -e ${RED}"-------------------------------------------------"

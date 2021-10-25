@@ -124,14 +124,8 @@ echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
-bootctl install --esp-path=/mnt/boot
-[ ! -d "/mnt/boot/loader/entries" ] && mkdir -p /mnt/boot/loader/entries
-cat <<EOF > /mnt/boot/loader/entries/arch.conf
-title Arch Linux  
-linux /vmlinuz-linux  
-initrd  /initramfs-linux.img  
-options root=LABEL=ROOT rw rootflags=subvol=@
-EOF
+arch-chroot pacman pacman -S --noconfirm grub 
+arch-chroot grub-install --target=x86_64-efi --efi-directory=/mnt --bootloader-id=GRUB
 cp -R ~/arch /mnt/root/
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 cp /etc/makepkg.conf /mnt/etc/makepkg.conf

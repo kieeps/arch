@@ -235,9 +235,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
 echo -e "$username:$password" | arch-chroot /mnt chpasswd
 # cp -R /root/arch /mnt/home/$username/
-cp -R ~/arch/.zshrc /mnt/home/$username/
-cp -R ~/arch/.p10k.zsh /mnt/home/$username/
-arch-chroot /mnt chown -R $username:$username /home/$username/
+
 
 
 echo -e ${RED}"-------------------------------------------------"
@@ -247,7 +245,11 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 # arch-chroot /mnt sudo konsave -i /home/kieeps/kieeps.knsv
 # arch-chroot /mnt sudo konsave -a kieeps
 
-
+touch "/mnt/home/$username/.cache/zshhistory"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /mnt/home/$username/powerlevel10k
+cp -R ~/arch/.zshrc /mnt/home/$username/
+cp -R ~/arch/.p10k.zsh /mnt/home/$username/
+arch-chroot /mnt chown -R $username:$username /home/$username/
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Enabling Services              ${RED}---"

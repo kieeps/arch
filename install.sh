@@ -17,6 +17,7 @@ PURPLE='\033[0;35m'
 NC='\033[0m'
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '/^Architecture/a ILoveCandy' /etc/pacman.conf
+sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
@@ -61,7 +62,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 timedatectl set-ntp true
 pacman -Sy --noconfirm pacman-contrib
-sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
 # pacman -S --noconfirm reflector rsync
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 reflector -a 48 -c SE -c DK -c NO -c UK -c DE -f 25 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
@@ -191,17 +191,17 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 
-echo -e ${PURPLE}"Reading Package list"
+echo -e ${PURPLE}"Reading Package list"${NC}
 source /root/arch/pkgs.conf
-echo -e ${PURPLE}"Installing BASE Packages"
+echo -e ${PURPLE}"Installing BASE Packages"${NC}
 for PKG in "${BASE[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG
 done
-echo -e ${PURPLE}"Installing GAMING Packages"
+echo -e ${PURPLE}"Installing GAMING Packages"${NC}
 for PKG in "${GAMING[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $GAMING
 done
-echo -e ${PURPLE}"Installing AUR Packages"
+echo -e ${PURPLE}"Installing AUR Packages"${NC}
 for PKG in "${AUR[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $AUR
 done

@@ -19,29 +19,6 @@ sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '/^Architecture/a ILoveCandy' /etc/pacman.conf
 
 echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-
-timedatectl set-ntp true
-pacman -Sy
-pacman -S --noconfirm pacman-contrib
-sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
-# pacman -S --noconfirm reflector rsync
-cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
-reflector -a 48 -c SE -c DK -c NO -c UK -c DE -f 25 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
-pacman -Sy
-
-nc=$(grep -c ^processor /proc/cpuinfo)
-sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$nc"/g' /etc/makepkg.conf
-sudo sed -i 's/COMPRESSXZ=(xz -c -z -)/COMPRESSXZ=(xz -c -T $nc -z -)/g' /etc/makepkg.conf
-
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}           Setting up Disk Tools           ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-pacman -S --noconfirm btrfs-progs
-
-
-echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
@@ -76,6 +53,42 @@ echo -e ${RED}"Please enter the disk to install on: (${GREEN}example /dev/sda${R
 read -p ">>" DISK
 echo -e "${RED}Are you sure? ${DISK} will be deleted during the setup if you use this one.${NC}"
 read -p "Continue? (Y/N):" formatdisk
+
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+timedatectl set-ntp true
+pacman -Sy
+pacman -S --noconfirm pacman-contrib
+sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
+# pacman -S --noconfirm reflector rsync
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+reflector -a 48 -c SE -c DK -c NO -c UK -c DE -f 25 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+pacman -Sy
+
+nc=$(grep -c ^processor /proc/cpuinfo)
+sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j$nc"/g' /etc/makepkg.conf
+sudo sed -i 's/COMPRESSXZ=(xz -c -z -)/COMPRESSXZ=(xz -c -T $nc -z -)/g' /etc/makepkg.conf
+
+#Enable multilib
+arch-chroot /mnt sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+
+#Add Chaotic AUR
+arch-chroot /mnt pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+arch-chroot /mnt pacman-key --lsign-key 3056513887B78AEB
+arch-chroot /mnt pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm --needed
+echo "[chaotic-aur]" >> /mnt/etc/pacman.conf
+echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /mnt/etc/pacman.conf
+arch-chroot /mnt pacman -Sy paru --noconfirm
+arch-chroot /mnt paru -Sy powerpill --noconfirm
+
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}              Preparing Disk               ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+pacman -Sy --noconfirm btrfs-progs
+
 case $formatdisk in
 
 y|Y|yes|Yes|YES)
@@ -126,9 +139,20 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}      Installing essential packages        ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
+## Bootstraping Base packages
 pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring wget libnewt --noconfirm --needed
 genfstab -U /mnt >> /mnt/etc/fstab
 echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
+
+## installing bootloader
+arch-chroot /mnt pacman -Sy grub grub-btrfs efibootmgr --noconfirm
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+## Installing Network Components
+arch-chroot /mnt pacman -S networkmanager dhclient --noconfirm --needed
+arch-chroot /mnt systemctl enable --now NetworkManager
+echo $hostname > /etc/hostname
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}               Set locale                  ${RED}---"
@@ -139,13 +163,6 @@ arch-chroot /mnt timedatectl --no-ask-password set-timezone Europe/Stockholm
 arch-chroot /mnt timedatectl --no-ask-password set-ntp 1
 arch-chroot /mnt localectl --no-ask-password set-locale LANG="en_US.UTF-8" LC_COLLATE="" LC_TIME="sv_SE.UTF-8"
 
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}    Installing Systemd bootloader          ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-arch-chroot /mnt pacman -Sy grub grub-btrfs efibootmgr --noconfirm
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=Arch
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-cp -R ~/arch /mnt/root/
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}          Copy configs over                ${RED}---"
@@ -155,29 +172,8 @@ cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 cp /etc/makepkg.conf /mnt/etc/makepkg.conf
 cp /etc/locale.gen /mnt/etc/locale.gen
 cp /etc/pacman.conf /mnt/etc/pacman.conf
+# cp -R ~/arch /mnt/root/
 
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}    Installing Network Components          ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-
-arch-chroot /mnt pacman -S networkmanager dhclient --noconfirm --needed
-arch-chroot /mnt systemctl enable --now NetworkManager
-echo $hostname > /etc/hostname
-
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}      Enable Multilib and Chaotic          ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-#Enable multilib
-arch-chroot /mnt sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-
-#Add Chaotic AUR
-arch-chroot /mnt pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-arch-chroot /mnt pacman-key --lsign-key 3056513887B78AEB
-arch-chroot /mnt pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm --needed
-echo "[chaotic-aur]" >> /mnt/etc/pacman.conf
-echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /mnt/etc/pacman.conf
-arch-chroot /mnt pacman -Sy paru --noconfirm
-arch-chroot /mnt paru -Sy powerpill --noconfirm
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Install Basesystem and software        ${RED}---"
@@ -231,7 +227,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
 echo -e "$username:$password" | arch-chroot /mnt chpasswd
-# arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username -p $password
 cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch
 

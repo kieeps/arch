@@ -154,12 +154,16 @@ arch-chroot /mnt localectl --no-ask-password set-locale LANG="en_US.UTF-8" LC_CO
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}          Copy configs over                ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
-
+echo -e "Copying mirrorlist ... ${cyan}DONE!"${NC}
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
+echo -e "Copying makepkg.conf ... ${cyan}DONE!"${NC}
 cp /etc/makepkg.conf /mnt/etc/makepkg.conf
+echo -e "Copying locale.gen ...${cyan}DONE!"${NC}
 cp /etc/locale.gen /mnt/etc/locale.gen
+echo -e "Copying pacman.conf ...${cyan}DONE!"${NC}
 cp /etc/pacman.conf /mnt/etc/pacman.conf
-cp -R ~/arch /mnt/root/
+echo -e "Copying pkgs.conf ...${cyan}DONE!"${NC}
+cp -R ~/arch/pkgs.conf /mnt/root/
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}   Enable Multilib and Chaotic AUR          ${RED}---"
@@ -229,8 +233,11 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
 echo -e "$username:$password" | arch-chroot /mnt chpasswd
-cp -R /root/arch /mnt/home/$username/
+# cp -R /root/arch /mnt/home/$username/
+cp -R ~/arch/.zshrc /mnt/home/$username/
+cp -R ~/arch/.p10k.zsh /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch
+
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}           Costumizing System              ${RED}---"

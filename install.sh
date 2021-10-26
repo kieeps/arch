@@ -171,6 +171,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 #Enable multilib
 arch-chroot /mnt sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+arch-chroot /mnt pacman -Sy
 
 #Add Chaotic AUR
 arch-chroot /mnt pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com

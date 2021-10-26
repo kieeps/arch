@@ -194,15 +194,15 @@ sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mn
 echo -e ${PURPLE}"Reading Package list"
 source /root/arch/pkgs.conf
 echo -e ${PURPLE}"Installing BASE Packages"
-for BASE in "${BASE[@]}"; do
+for PKG in "${BASE[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG
 done
 echo -e ${PURPLE}"Installing GAMING Packages"
-for GAMING in "${GAMING[@]}"; do
+for PKG in "${GAMING[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $GAMING
 done
 echo -e ${PURPLE}"Installing AUR Packages"
-for AUR in "${AUR[@]}"; do
+for PKG in "${AUR[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $AUR
 done
 

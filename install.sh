@@ -181,6 +181,8 @@ echo "[chaotic-aur]" >> /mnt/etc/pacman.conf
 echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Sy paru --noconfirm
 arch-chroot /mnt paru -Sy powerpill --noconfirm
+sed -i 's/^#BottomUp/BottomUp/' /mnt/etc/paru.conf
+
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}    Install Basesystem and software        ${RED}---"

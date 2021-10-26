@@ -263,6 +263,10 @@ cp -R ~/arch/.zshrc /mnt/home/$username/
 cp -R ~/arch/.p10k.zsh /mnt/home/$username/
 arch-chroot /mnt chown -R $username:$username /home/$username/
 
+sed -i 's/^ColorScheme=BreezeLight/ColorScheme=BreezeDark/' /mnt/etc/paru.conf
+sed -i 's/^Name=Breeze Light/Name=BreezeDark/' /mnt/home/$username/.kde4/share/config/kdeglobals
+sed -i 's/^#BottomUp/BottomUp/' /mnt/etc/paru.conf
+
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Enabling Services              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}

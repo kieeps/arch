@@ -18,9 +18,6 @@ NC='\033[0m'
 sed -i 's/^#Color/Color/' /etc/pacman.conf
 sed -i '/^Architecture/a ILoveCandy' /etc/pacman.conf
 
-## Debug 
-# exec 1>log.out 2>&1
-
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -231,8 +228,10 @@ fi
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
+
 arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
-echo -e "$username:$password" | arch-chroot /mnt chpasswd
+arch-chroot /mnt echo -e "$password\n$password" | arch-chroot /mnt passwd $username
+# arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username -p $password
 cp -R /root/arch /mnt/home/$username/
 arch-chroot /mnt chown -R $username: /home/$username/arch
 

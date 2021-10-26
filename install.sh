@@ -185,15 +185,24 @@ sed -i 's/^#BottomUp/BottomUp/' /mnt/etc/paru.conf
 
 
 echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}    Install Basesystem and software        ${RED}---"
+echo -e ${RED}"---${CYAN}            Install Software               ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 
+echo -e ${PURPLE}"Installing BASE Packages"
 source /root/arch/pkgs.conf
-for PKG in "${BASE[@]}"; do
+for BASE in "${BASE[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG
+done
+
+for GAMING in "${GAMING[@]}"; do
+    arch-chroot /mnt paru -S --noconfirm $GAMING
+done
+
+for AUR in "${AUR[@]}"; do
+    arch-chroot /mnt paru -S --noconfirm $AUR
 done
 
 echo -e ${RED}"-------------------------------------------------"

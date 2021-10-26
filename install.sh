@@ -237,7 +237,7 @@ echo -e "$username:$password" | arch-chroot /mnt chpasswd
 # cp -R /root/arch /mnt/home/$username/
 cp -R ~/arch/.zshrc /mnt/home/$username/
 cp -R ~/arch/.p10k.zsh /mnt/home/$username/
-arch-chroot /mnt chown -R $username: /home/$username/arch
+arch-chroot /mnt chown -R $username: /home/$username/
 
 
 echo -e ${RED}"-------------------------------------------------"

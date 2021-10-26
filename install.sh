@@ -60,8 +60,7 @@ echo -e ${RED}"---${CYAN}            Setting up Mirrors             ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 timedatectl set-ntp true
-pacman -Sy
-pacman -S --noconfirm pacman-contrib
+pacman -Sy --noconfirm pacman-contrib
 sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 15/' /etc/pacman.conf
 # pacman -S --noconfirm reflector rsync
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
@@ -92,7 +91,6 @@ pacman -Sy --noconfirm btrfs-progs
 case $formatdisk in
 
 y|Y|yes|Yes|YES)
-    echo -e "${RED} Okey then, here we go!${NC}"
     
     # disk prep
     sgdisk -Z ${DISK} # zap disk
@@ -172,7 +170,7 @@ cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 cp /etc/makepkg.conf /mnt/etc/makepkg.conf
 cp /etc/locale.gen /mnt/etc/locale.gen
 cp /etc/pacman.conf /mnt/etc/pacman.conf
-# cp -R ~/arch /mnt/root/
+cp -R ~/arch /mnt/root/
 
 
 echo -e ${RED}"-------------------------------------------------"

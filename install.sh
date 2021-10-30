@@ -271,6 +271,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /mnt/home/$user
 cp -R ~/arch/.zshrc /mnt/home/$username/
 cp -R ~/arch/.p10k.zsh /mnt/home/$username/
 cp -R org.kde.yakuake.desktop /home/$username/.config/autostart/
+echo $hostname >> /mnt/root/etc/hostname
 arch-chroot /mnt chown -R $username:$username /home/$username/
 
 

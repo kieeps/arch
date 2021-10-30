@@ -261,6 +261,7 @@ touch "/mnt/home/$username/.cache/zshhistory"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /mnt/home/$username/powerlevel10k
 cp -R ~/arch/.zshrc /mnt/home/$username/
 cp -R ~/arch/.p10k.zsh /mnt/home/$username/
+cp -R org.kde.yakuake.desktop /home/$username/.config/autostart/
 arch-chroot /mnt chown -R $username:$username /home/$username/
 
 

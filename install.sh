@@ -198,21 +198,21 @@ for PKG in "${BASE[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG
 done
 echo -e ${PURPLE}"Installing GAMING Packages"${NC}
-for PKG in "${GAMING[@]}"; do
+for GAMING in "${GAMING[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $GAMING
 done
 if lspci | grep -E "NVIDIA|GeForce"; then
-    for PKG in "${GAMINGNVIDIA[@]}"; do
+    for GAMINGNVIDIA in "${GAMINGNVIDIA[@]}"; do
         arch-chroot /mnt paru -S --noconfirm $GAMINGNVIDIA
     done
 elif lspci | grep -E "Radeon|AMD/ATI"; then
-    for PKG in "${GAMINGAMD[@]}"; do
+    for GAMINGAMD in "${GAMINGAMD[@]}"; do
         rch-chroot /mnt paru -S --noconfirm $GAMINGAMD
     done
 fi
 echo -e ${PURPLE}"Installing EXTRA Packages"${NC}
-for PKG in "${EXTRA[@]}"; do
-    arch-chroot /mnt paru -S --noconfirm $AUR
+for EXTRA in "${EXTRA[@]}"; do
+    arch-chroot /mnt paru -S --noconfirm $EXTRA
 done
 
 echo -e ${RED}"-------------------------------------------------"

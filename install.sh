@@ -54,6 +54,17 @@ echo -e ${RED}"Please enter the disk to install on: (${GREEN}example /dev/sda${R
 read -p ">>" DISK
 echo -e "${RED}Are you sure? ${DISK} will be deleted during the setup if you use this one.${NC}"
 read -p "Continue? (Y/N):" formatdisk
+echo -e ${RED}"Use separate disk for /home?"${NC}
+read -p ">>" usehomedisk
+case $usehomedisk in
+    y|Y|yes|Yes|YES)
+
+    lsblk
+    echo -e ${RED}"Please enter the disk to install /home on: (${GREEN}example /dev/sdb${RED})"${NC}
+    read -p ">>" homedisk
+    ;;
+    
+esac
 
 
 echo -e ${RED}"-------------------------------------------------"
@@ -122,6 +133,38 @@ n|N|no|No|NO)
     ;;
 esac
 
+case $homedisk in
+
+y|Y|yes|Yes|YES)
+    
+    # disk prep
+    sgdisk -Z ${HOMEDISK} # zap disk
+    sgdisk -a 2048 -o ${HOMEDISK} # new gpt disk 2048 alignment
+
+    # create partitions
+    sgdisk -n 1:0:0 ${HOMEDISK} # partition 1 (Root)
+
+    # set partition types
+    sgdisk -t 1:8300 ${HOMEDISK} # EFI System Partition
+
+    # label partitions
+    sgdisk -c 1:"HOME" ${HOMEDISK}
+
+    # make filesystems
+    mkdir /mnt/home
+    if [[ ${DISK} =~ "nvme" ]]; then
+    mkfs.btrfs -L "HOME" "${HOMEDISK}p1" -f
+    mount -t btrfs "${HOMEDISK}p1" /mnt/home
+    else
+    mkfs.btrfs -L "HOME" "${HOMEDISK}1" -f
+    mount -t btrfs "${HOMEDISK}1" /mnt/home
+    fi
+    btrfs subvolume create /mnt/@home
+    umount /mnt/home
+    mount -t btrfs -o subvol=@ -L ROOT /mnt
+    ;;
+esac
+
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}      Installing essential packages        ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -164,6 +207,18 @@ echo -e "Copying pacman.conf ...${cyan}DONE!"${NC}
 cp /etc/pacman.conf /mnt/etc/pacman.conf
 echo -e "Copying pkgs.conf ...${cyan}DONE!"${NC}
 cp -R ~/arch/pkgs.conf /mnt/root/
+
+case $homedisk in
+
+y|Y|yes|Yes|YES)
+    echo -e ${RED}"-------------------------------------------------"
+    echo -e ${RED}"---${CYAN}          Copy configs over                ${RED}---"
+    echo -e ${RED}"-------------------------------------------------"${NC}
+    echo -e "UUID=theuuid /home          btrfs   auto,nouser,defaults,nodev,relatime     0    0" >> /mnt/etc/fstab
+    blkid -s UUID -o value ${HOMEDISK} | xargs -I '{}' sed -i 's/theuuid/{}/g' /mnt/etc/fstab
+    ;
+
+esac
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}   Enable Multilib and Chaotic AUR          ${RED}---"

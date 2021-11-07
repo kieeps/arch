@@ -63,7 +63,7 @@ case $usehomedisk in
     echo -e ${RED}"Please enter the disk to install /home on: (${GREEN}example /dev/sdb${RED})"${NC}
     read -p ">>" homedisk
     ;;
-    
+
 esac
 
 
@@ -133,7 +133,7 @@ n|N|no|No|NO)
     ;;
 esac
 
-case $homedisk in
+case $usehomedisk in
 
 y|Y|yes|Yes|YES)
     
@@ -159,9 +159,6 @@ y|Y|yes|Yes|YES)
     mkfs.btrfs -L "HOME" "${HOMEDISK}1" -f
     mount -t btrfs "${HOMEDISK}1" /mnt/home
     fi
-    btrfs subvolume create /mnt/@home
-    umount /mnt/home
-    mount -t btrfs -o subvol=@ -L ROOT /mnt
     ;;
 esac
 

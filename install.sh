@@ -55,7 +55,7 @@ read -p ">>" DISK
 echo -e "${RED}Are you sure? ${DISK} will be deleted during the setup if you use this one.${NC}"
 read -p "Continue? (Y/N):" formatdisk
 echo -e ${RED}"Use separate disk for /home?"${NC}
-read -p ">>" usehomedisk
+read -p "Continue? (Y/N):" usehomedisk
 case $usehomedisk in
     y|Y|yes|Yes|YES)
 

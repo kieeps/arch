@@ -184,7 +184,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 ## Bootstraping Base packages
 pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring wget libnewt --noconfirm --needed
 genfstab -U /mnt >> /mnt/etc/fstab
-case $usehomedisk in
+case $usehomedisk2 in
 
 y|Y|yes|Yes|YES)
     echo -e ${RED}"-------------------------------------------------"

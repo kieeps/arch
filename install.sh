@@ -342,6 +342,7 @@ arch-chroot /mnt systemctl disable dhcpcd.service
 arch-chroot /mnt systemctl stop dhcpcd.service
 arch-chroot /mnt systemctl enable NetworkManager.service
 arch-chroot /mnt systemctl enable docker.service
+arch-chroot /mnt systemctl enable grub-btrfs.path
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"

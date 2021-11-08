@@ -61,7 +61,7 @@ case $usehomedisk in
 
     lsblk
     echo -e ${RED}"Please enter the disk to install /home on: (${GREEN}example /dev/sdb${RED})"${NC}
-    read -p ">>" homedisk
+    read -p ">>" HOMEDISK
     echo -e "${RED}Are you sure? ${HOMEDISK} will be deleted during the setup if you use this one.${NC}"
     read -p "Continue? (Y/N):" formathomedisk
     ;;

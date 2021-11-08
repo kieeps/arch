@@ -62,6 +62,8 @@ case $usehomedisk in
     lsblk
     echo -e ${RED}"Please enter the disk to install /home on: (${GREEN}example /dev/sdb${RED})"${NC}
     read -p ">>" homedisk
+    echo -e "${RED}Are you sure? ${HOMEDISK} will be deleted during the setup if you use this one.${NC}"
+    read -p "Continue? (Y/N):" formathomedisk
     ;;
 
 esac
@@ -137,7 +139,7 @@ echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}       Preparing ${HOMEDISK}               ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
-case $usehomedisk in
+case $formathomedisk in
 
 y|Y|yes|Yes|YES)
     

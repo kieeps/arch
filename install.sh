@@ -164,7 +164,9 @@ esac
 
 read -p "Go on?" goon
 case $goon in
-
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
 n|N|no|No|NO)
     exit 1
     ;;
@@ -216,7 +218,7 @@ case $usehomedisk in
 
 y|Y|yes|Yes|YES)
     echo -e ${RED}"-------------------------------------------------"
-    echo -e ${RED}"---${CYAN}     Edit FSTAb with new home              ${RED}---"
+    echo -e ${RED}"---${CYAN}     Edit FSTAB with new home              ${RED}---"
     echo -e ${RED}"-------------------------------------------------"${NC}
     echo -e "# ${HOMEDISK}p1 LABEL=HOME" >> /mnt/etc/fstab
     echo -e "UUID=theuuid /home          btrfs   auto,nouser,defaults,nodev    0    0" >> /mnt/etc/fstab
@@ -225,6 +227,15 @@ y|Y|yes|Yes|YES)
 
 esac
 
+read -p "Go on?" goon
+case $goon in
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}   Enable Multilib and Chaotic AUR          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -243,13 +254,21 @@ arch-chroot /mnt pacman -Sy paru --noconfirm
 arch-chroot /mnt paru -Sy powerpill --noconfirm
 sed -i 's/^#BottomUp/BottomUp/' /mnt/etc/paru.conf
 
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
+
+arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
+echo -e "$username:$password" | arch-chroot /mnt chpasswd
+# cp -R /root/arch /mnt/home/$username/
+
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Install Software               ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
-
-sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 
 echo -e ${PURPLE}"Reading Package list"${NC}
 source /root/arch/pkgs.conf
@@ -309,13 +328,6 @@ elif lspci | grep -E "Integrated Graphics Controller"; then
     arch-chroot /mnt pacman -S libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils --needed --noconfirm
 fi
 
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-
-arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
-echo -e "$username:$password" | arch-chroot /mnt chpasswd
-# cp -R /root/arch /mnt/home/$username/
 
 
 

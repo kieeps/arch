@@ -156,7 +156,7 @@ y|Y|yes|Yes|YES)
 
     echo -e ${RED} make filesystems${NC}
     mkdir /mnt/home
-    if [[ ${DISK} =~ "nvme" ]]; then
+    if [[ ${HOMEDISK} =~ "nvme" ]]; then
     mkfs.btrfs -L "HOME" "${HOMEDISK}p1" -f
     mount -t btrfs "${HOMEDISK}p1" /mnt/home
     else

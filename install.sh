@@ -162,6 +162,13 @@ y|Y|yes|Yes|YES)
     ;;
 esac
 
+read -p "Go on?" goon
+case $goon in
+
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}      Installing essential packages        ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}

@@ -134,27 +134,27 @@ n|N|no|No|NO)
 esac
 
 echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}         Preparing Home Disk               ${RED}---"
+echo -e ${RED}"---${CYAN}       Preparing ${HOMEDISK}               ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 case $usehomedisk in
 
 y|Y|yes|Yes|YES)
     
-    # disk prep
+    echo -e ${RED} disk prep${NC}
     sgdisk -Z ${HOMEDISK} # zap disk
     sgdisk -a 2048 -o ${HOMEDISK} # new gpt disk 2048 alignment
 
-    # create partitions
+    echo -e ${RED} create partitions${NC}
     sgdisk -n 1:0:0 ${HOMEDISK} # partition 1 (Root)
 
-    # set partition types
+    echo -e ${RED} set partition types${NC}
     sgdisk -t 1:8300 ${HOMEDISK} # EFI System Partition
 
-    # label partitions
+    echo -e ${RED} label partitions${NC}
     sgdisk -c 1:"HOME" ${HOMEDISK}
 
-    # make filesystems
+    echo -e ${RED} make filesystems${NC}
     mkdir /mnt/home
     if [[ ${DISK} =~ "nvme" ]]; then
     mkfs.btrfs -L "HOME" "${HOMEDISK}p1" -f

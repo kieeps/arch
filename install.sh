@@ -205,7 +205,7 @@ cp /etc/pacman.conf /mnt/etc/pacman.conf
 echo -e "Copying pkgs.conf ...${cyan}DONE!"${NC}
 cp -R ~/arch/pkgs.conf /mnt/root/
 
-case $homedisk in
+case $usehomedisk in
 
 y|Y|yes|Yes|YES)
     echo -e ${RED}"-------------------------------------------------"

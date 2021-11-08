@@ -209,9 +209,9 @@ case $usehomedisk in
 
 y|Y|yes|Yes|YES)
     echo -e ${RED}"-------------------------------------------------"
-    echo -e ${RED}"---${CYAN}          Copy configs over                ${RED}---"
+    echo -e ${RED}"---${CYAN}            Copy FSTAB over                ${RED}---"
     echo -e ${RED}"-------------------------------------------------"${NC}
-    echo -e "# ${HOMEDISK}p1 LABEL=HOME"
+    echo -e "# ${HOMEDISK}p1 LABEL=HOME" >> /mnt/etc/fstab
     echo -e "UUID=theuuid /home          btrfs   auto,nouser,defaults,nodev    0    0" >> /mnt/etc/fstab
     blkid -s UUID -o value ${HOMEDISK} | xargs -I '{}' sed -i 's/theuuid/{}/g' /mnt/etc/fstab
     ;;

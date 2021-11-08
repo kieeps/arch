@@ -185,19 +185,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring wget libnewt --noconfirm --needed
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# case $usehomedisk in
-
-# y|Y|yes|Yes|YES)
-#     echo -e ${RED}"-------------------------------------------------"
-#     echo -e ${RED}"---${CYAN}     Edit FSTAB with new home              ${RED}---"
-#     echo -e ${RED}"-------------------------------------------------"${NC}
-#     echo -e "# ${HOMEDISK}p1 LABEL=HOME" >> /mnt/etc/fstab
-#     echo -e "UUID=theuuid /home          btrfs   auto,nouser,defaults,nodev    0    0" >> /mnt/etc/fstab
-#     blkid -s UUID -o value ${HOMEDISK} | xargs -I '{}' sed -i 's/theuuid/{}/g' /mnt/etc/fstab
-#     ;;
-
-# esac
-
 echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 
 ## installing bootloader
@@ -234,15 +221,6 @@ cp /etc/pacman.conf /mnt/etc/pacman.conf
 echo -e "Copying pkgs.conf ...${cyan}DONE!"${NC}
 cp -R ~/arch/pkgs.conf /mnt/root/
 
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}   Enable Multilib and Chaotic AUR          ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -271,6 +249,15 @@ arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
 echo -e "$username:$password" | arch-chroot /mnt chpasswd
 # cp -R /root/arch /mnt/home/$username/
 
+read -p "Go on?" goon
+case $goon in
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Install Software               ${RED}---"
@@ -283,10 +270,28 @@ echo -e ${PURPLE}"Installing BASE Packages"${NC}
 for PKG in "${BASE[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG
 done
+read -p "Go on?" goon
+case $goon in
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 echo -e ${PURPLE}"Installing GAMING Packages"${NC}
 for GAMING in "${GAMING[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $GAMING
 done
+read -p "Go on?" goon
+case $goon in
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 if lspci | grep -E "NVIDIA|GeForce"; then
     for GAMINGNVIDIA in "${GAMINGNVIDIA[@]}"; do
         arch-chroot /mnt paru -S --noconfirm $GAMINGNVIDIA
@@ -296,11 +301,28 @@ elif lspci | grep -E "Radeon|AMD/ATI"; then
         rch-chroot /mnt paru -S --noconfirm $GAMINGAMD
     done
 fi
+read -p "Go on?" goon
+case $goon in
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 echo -e ${PURPLE}"Installing EXTRA Packages"${NC}
 for EXTRA in "${EXTRA[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $EXTRA
 done
-
+read -p "Go on?" goon
+case $goon in
+y|Y|yes|Yes|YES)
+    goon="null"
+    ;;
+n|N|no|No|NO)
+    exit 1
+    ;;
+esac
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Install Microcode              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}

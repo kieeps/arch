@@ -133,6 +133,10 @@ n|N|no|No|NO)
     ;;
 esac
 
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}         Preparing Home Disk               ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
 case $usehomedisk in
 
 y|Y|yes|Yes|YES)

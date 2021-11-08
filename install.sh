@@ -86,7 +86,7 @@ sudo sed -i 's/COMPRESSXZ=(xz -c -z -)/COMPRESSXZ=(xz -c -T $nc -z -)/g' /etc/ma
 
 
 echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}              Preparing Disk               ${RED}---"
+echo -e ${RED}"---${CYAN}              Preparing ${DISK}              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 pacman -Sy --noconfirm btrfs-progs
 
@@ -142,8 +142,8 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 case $formathomedisk in
 
 y|Y|yes|Yes|YES)
-    
-    echo -e ${RED} disk prep${NC}
+
+    echo -e ${RED} disk prep ${HOMEDISK} ${NC}
     sgdisk -Z ${HOMEDISK} # zap disk
     sgdisk -a 2048 -o ${HOMEDISK} # new gpt disk 2048 alignment
 

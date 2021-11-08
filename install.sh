@@ -184,18 +184,19 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 ## Bootstraping Base packages
 pacstrap /mnt base base-devel linux linux-firmware nano sudo archlinux-keyring wget libnewt --noconfirm --needed
 genfstab -U /mnt >> /mnt/etc/fstab
-case $usehomedisk2 in
 
-y|Y|yes|Yes|YES)
-    echo -e ${RED}"-------------------------------------------------"
-    echo -e ${RED}"---${CYAN}     Edit FSTAB with new home              ${RED}---"
-    echo -e ${RED}"-------------------------------------------------"${NC}
-    echo -e "# ${HOMEDISK}p1 LABEL=HOME" >> /mnt/etc/fstab
-    echo -e "UUID=theuuid /home          btrfs   auto,nouser,defaults,nodev    0    0" >> /mnt/etc/fstab
-    blkid -s UUID -o value ${HOMEDISK} | xargs -I '{}' sed -i 's/theuuid/{}/g' /mnt/etc/fstab
-    ;;
+# case $usehomedisk in
 
-esac
+# y|Y|yes|Yes|YES)
+#     echo -e ${RED}"-------------------------------------------------"
+#     echo -e ${RED}"---${CYAN}     Edit FSTAB with new home              ${RED}---"
+#     echo -e ${RED}"-------------------------------------------------"${NC}
+#     echo -e "# ${HOMEDISK}p1 LABEL=HOME" >> /mnt/etc/fstab
+#     echo -e "UUID=theuuid /home          btrfs   auto,nouser,defaults,nodev    0    0" >> /mnt/etc/fstab
+#     blkid -s UUID -o value ${HOMEDISK} | xargs -I '{}' sed -i 's/theuuid/{}/g' /mnt/etc/fstab
+#     ;;
+
+# esac
 
 echo "keyserver hkp://keyserver.ubuntu.com" >> /mnt/etc/pacman.d/gnupg/gpg.conf
 

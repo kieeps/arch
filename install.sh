@@ -239,25 +239,6 @@ arch-chroot /mnt pacman -Sy paru --noconfirm
 arch-chroot /mnt paru -Sy powerpill --noconfirm
 sed -i 's/^#BottomUp/BottomUp/' /mnt/etc/paru.conf
 
-echo -e ${RED}"-------------------------------------------------"
-echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
-echo -e ${RED}"-------------------------------------------------"${NC}
-
-sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
-
-arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
-echo -e "$username:$password" | arch-chroot /mnt chpasswd
-# cp -R /root/arch /mnt/home/$username/
-
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Install Software               ${RED}---"
@@ -348,7 +329,7 @@ if lspci | grep -E "NVIDIA|GeForce"; then
         arch-chroot /mnt pacman -S nvidia-beta --noconfirm --needed
         arch-chroot /mnt nvidia-xconfig
     else
-        arch-chroot /mnt pacman -S nvidia --noconfirm --needed
+        arch-chroot /mnt pacman -S nvidia-beta --noconfirm --needed
 	    arch-chroot /mnt nvidia-xconfig
     fi
 elif lspci | grep -E "Radeon|AMD/ATI"; then
@@ -358,6 +339,15 @@ elif lspci | grep -E "Integrated Graphics Controller"; then
 fi
 
 
+echo -e ${RED}"-------------------------------------------------"
+echo -e ${RED}"---${CYAN}          Create User on system            ${RED}---"
+echo -e ${RED}"-------------------------------------------------"${NC}
+
+sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
+
+arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
+echo -e "$username:$password" | arch-chroot /mnt chpasswd
+# cp -R /root/arch /mnt/home/$username/
 
 
 echo -e ${RED}"-------------------------------------------------"
@@ -395,6 +385,7 @@ arch-chroot /mnt systemctl enable grub-btrfs.path
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
+
 
 sed -i 's/^%wheel ALL=(ALL) NOPASSWD: ALL/# %wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /mnt/etc/sudoers

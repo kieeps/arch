@@ -312,7 +312,7 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 sed -i 's/^# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /mnt/etc/sudoers
 
-arch-chroot /mnt useradd -m -G wheel,libvirt,docker -s /bin/zsh $username
+arch-chroot /mnt useradd -m -G wheel -s /bin/zsh $username
 echo -e "$username:$password" | arch-chroot /mnt chpasswd
 # cp -R /root/arch /mnt/home/$username/
 

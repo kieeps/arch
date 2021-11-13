@@ -47,7 +47,7 @@ read -p ">>" hostname
 if lspci | grep -E "NVIDIA|GeForce"; then
     echo -p "${RED}Do you prefer ${CYAN}Beta ${RED}or ${CYAN} Stable${RED} NVidia drivers?${NC}"
     read -p "(Stable/Beta)?" >> nvidia
-    case $nvidia
+    case $nvidia in
     Stable|stable|STABLE)
     usebeta='no'
     ;;

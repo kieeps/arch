@@ -248,7 +248,7 @@ echo -e ${PURPLE}"Reading Package list"${NC}
 source /root/arch/pkgs.conf
 echo -e ${PURPLE}"Installing BASE Packages"${NC}
 for PKG in "${BASE[@]}"; do
-    arch-chroot /mnt paru -S --noconfirm $PKG
+    arch-chroot /mnt paru -S --noconfirm --needed $PKG
 done
 
 # echo -e ${PURPLE}"Installing GAMING Packages"${NC}

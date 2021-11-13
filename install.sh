@@ -46,7 +46,15 @@ read -p ">>" hostname
 # Stable or Beta drivers
 if lspci | grep -E "NVIDIA|GeForce"; then
     echo -p "${RED}Do you prefer ${CYAN}Beta ${RED}or ${CYAN} Stable${RED} NVidia drivers?${NC}"
-    read -p >> nvidia
+    read -p (Stable/Beta)? >> nvidia
+    case $nvidia
+    Stable|stable|STABLE)
+    usebeta='no'
+    ;;
+    Beta|beta|BETA)
+    usebeta='yes'
+    ;;
+    esac
 fi
 
 lsblk
@@ -168,15 +176,6 @@ y|Y|yes|Yes|YES)
     ;;
 esac
 
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}      Installing essential packages        ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -251,59 +250,27 @@ echo -e ${PURPLE}"Installing BASE Packages"${NC}
 for PKG in "${BASE[@]}"; do
     arch-chroot /mnt paru -S --noconfirm $PKG
 done
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
-echo -e ${PURPLE}"Installing GAMING Packages"${NC}
-for GAMING in "${GAMING[@]}"; do
-    arch-chroot /mnt paru -S --noconfirm $GAMING
-done
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
-if lspci | grep -E "NVIDIA|GeForce"; then
-    for GAMINGNVIDIA in "${GAMINGNVIDIA[@]}"; do
-        arch-chroot /mnt paru -S --noconfirm $GAMINGNVIDIA
-    done
-elif lspci | grep -E "Radeon|AMD/ATI"; then
-    for GAMINGAMD in "${GAMINGAMD[@]}"; do
-        rch-chroot /mnt paru -S --noconfirm $GAMINGAMD
-    done
-fi
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
-echo -e ${PURPLE}"Installing EXTRA Packages"${NC}
-for EXTRA in "${EXTRA[@]}"; do
-    arch-chroot /mnt paru -S --noconfirm $EXTRA
-done
-read -p "Go on?" goon
-case $goon in
-y|Y|yes|Yes|YES)
-    goon="null"
-    ;;
-n|N|no|No|NO)
-    exit 1
-    ;;
-esac
+
+# echo -e ${PURPLE}"Installing GAMING Packages"${NC}
+# for GAMING in "${GAMING[@]}"; do
+#     arch-chroot /mnt paru -S --noconfirm $GAMING
+# done
+
+# if lspci | grep -E "NVIDIA|GeForce"; then
+#     for GAMINGNVIDIA in "${GAMINGNVIDIA[@]}"; do
+#         arch-chroot /mnt paru -S --noconfirm $GAMINGNVIDIA
+#     done
+# elif lspci | grep -E "Radeon|AMD/ATI"; then
+#     for GAMINGAMD in "${GAMINGAMD[@]}"; do
+#         rch-chroot /mnt paru -S --noconfirm $GAMINGAMD
+#     done
+# fi
+
+# echo -e ${PURPLE}"Installing EXTRA Packages"${NC}
+# for EXTRA in "${EXTRA[@]}"; do
+#     arch-chroot /mnt paru -S --noconfirm $EXTRA
+# done
+
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}            Install Microcode              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
@@ -325,8 +292,8 @@ echo -e ${RED}"---${CYAN}           Install GPU Drivers             ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 if lspci | grep -E "NVIDIA|GeForce"; then
-    if [[ ${nvidia} =~ "eta" ]]; then
-        arch-chroot /mnt pacman -S nvidia-beta --noconfirm --needed
+    if [[ ${usebeta} = "no" ]]; then
+        arch-chroot /mnt pacman -S nvidia --noconfirm --needed
         arch-chroot /mnt nvidia-xconfig
     else
         arch-chroot /mnt pacman -S nvidia-beta --noconfirm --needed
@@ -353,15 +320,7 @@ echo -e "$username:$password" | arch-chroot /mnt chpasswd
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}           Costumizing System              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
-# arch-chroot /mnt wget https://cloud.kieeps.com/s/QzpPF5Tcw2tHY3L/download -O /home/kieeps/kieeps.knsv
-# arch-chroot /mnt sudo konsave -i /home/kieeps/kieeps.knsv
-# arch-chroot /mnt sudo konsave -a kieeps
 
-touch "/mnt/home/$username/.cache/zshhistory"
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /mnt/home/$username/powerlevel10k
-cp -R ~/arch/.zshrc /mnt/home/$username/
-cp -R ~/arch/.p10k.zsh /mnt/home/$username/
-cp -R org.kde.yakuake.desktop /home/$username/.config/autostart/
 echo $hostname >> /mnt/etc/hostname
 arch-chroot /mnt chown -R $username:$username /home/$username/
 
@@ -373,6 +332,7 @@ echo -e ${RED}"---${CYAN}            Enabling Services              ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt systemctl enable sddm.service
+arch-chroot /mnt systemctl enable pipewire-pulse.service
 arch-chroot /mnt systemctl enable cups.service
 arch-chroot /mnt ntpd -qg
 arch-chroot /mnt systemctl enable ntpd.service

@@ -333,14 +333,14 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 arch-chroot /mnt systemctl enable sddm.service
 arch-chroot /mnt systemctl enable pipewire-pulse.service
-arch-chroot /mnt systemctl enable cups.service
+#arch-chroot /mnt systemctl enable cups.service
 arch-chroot /mnt ntpd -qg
 arch-chroot /mnt systemctl enable ntpd.service
 arch-chroot /mnt systemctl disable dhcpcd.service
 arch-chroot /mnt systemctl stop dhcpcd.service
 arch-chroot /mnt systemctl enable NetworkManager.service
-arch-chroot /mnt systemctl enable docker.service
-arch-chroot /mnt systemctl enable grub-btrfs.path
+#arch-chroot /mnt systemctl enable docker.service
+#arch-chroot /mnt systemctl enable grub-btrfs.path
 
 echo -e ${RED}"-------------------------------------------------"
 echo -e ${RED}"---${CYAN}                Finishing                  ${RED}---"

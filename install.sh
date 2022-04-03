@@ -24,8 +24,6 @@ echo -e ${RED}"---${CYAN}                User Input                 ${RED}---"
 echo -e ${RED}"-------------------------------------------------"${NC}
 
 ## Set Keymap
-#echo -e "${RED}Select Keymap. (${GREEN}Swedish is sv-latin1${RED})${NC}"
-#read -p ">>" keymap
 localectl --no-ask-password set-keymap sv-latin1
 sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 sed -i 's/^#sv_SE.UTF-8 UTF-8/sv_SE.UTF-8 UTF-8/' /etc/locale.gen
@@ -83,7 +81,6 @@ echo -e ${RED}"-------------------------------------------------"${NC}
 
 timedatectl set-ntp true
 pacman -Sy --noconfirm pacman-contrib
-# pacman -S --noconfirm reflector rsync
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 reflector -a 48 -c SE -c DK -c NO -c UK -c DE -f 25 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
 pacman -Sy

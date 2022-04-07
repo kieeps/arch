@@ -226,8 +226,8 @@ arch-chroot /mnt sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 arch-chroot /mnt pacman -Sy
 
 #Add Chaotic AUR
-arch-chroot /mnt pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-arch-chroot /mnt pacman-key --lsign-key 3056513887B78AEB
+arch-chroot /mnt pacman-key --recv-key FBA220DFC880C036 --keyserver keyserver.ubuntu.com
+arch-chroot /mnt pacman-key --lsign-key FBA220DFC880C036
 arch-chroot /mnt pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm --needed
 echo "[chaotic-aur]" >> /mnt/etc/pacman.conf
 echo "Include = /etc/pacman.d/chaotic-mirrorlist" >> /mnt/etc/pacman.conf
